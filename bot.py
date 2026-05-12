@@ -40,6 +40,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    # COMMAND: /setchannel
     if message.content.startswith("/setchannel"):
         if message.author.id != OWNER_ID:
             await message.reply("❌ Only the bot owner can use this command.")
@@ -57,6 +58,7 @@ async def on_message(message):
         await message.reply(f"✅ Bot will now reply in <#{channel_id}>")
         return
 
+    # COMMAND: /disable
     if message.content.startswith("/disable"):
         if message.author.id != OWNER_ID:
             await message.reply("❌ Only the bot owner can use this command.")
@@ -66,6 +68,7 @@ async def on_message(message):
         await message.reply("✅ Bot disabled. Use `/setchannel #channel` to enable again.")
         return
 
+    # COMMAND: /status
     if message.content.startswith("/status"):
         channel_id = get_channel_id()
         if channel_id:
@@ -74,6 +77,7 @@ async def on_message(message):
             await message.reply("⚠️ Bot is currently disabled. Ask the owner to use `/setchannel`.")
         return
 
+    # Normal AI reply
     channel_id = get_channel_id()
     if channel_id == 0:
         return
@@ -110,9 +114,11 @@ async def on_message(message):
                 await message.reply(answer)
             else:
                 await message.reply(f"Error: {response.status_code}")
+            return
 
         except Exception as e:
             await message.reply(f"Sorry, error: {str(e)}")
+            return
 
 # Flask server para sa Render (para hindi mag-timeout)
 app = Flask('')
@@ -126,4 +132,5 @@ def run_flask():
 
 threading.Thread(target=run_flask).start()
 
+# Run the bot
 client.run(TOKEN)
